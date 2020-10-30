@@ -19,23 +19,19 @@ public class EzarpenakDBKud {
 
   private EzarpenakDBKud (){}
 
-  public List<Ezarpena> lortuEzarpenak(){
+  public List<String> lortuHerrialdenIzenak(){
 
-    List<Ezarpena> emaitza = new ArrayList<>();
+    List<String> emaitza = new ArrayList<>();
     DBKudeatzaile dbkud = DBKudeatzaile.getInstantzia();
 
-    String query = "select * from properties";
+    String query = "select izena from ParteHartzea where urtea = '2020' AND etorrikoDa = 'bai'";
     ResultSet rs = dbkud.execSQL(query);
 
     try {
       while (rs.next()) {
 
-        Integer erabID = rs.getInt("userid");
-        String key = rs.getString("key");
-        String value = rs.getString("value");
-
-        Ezarpena ezarpena = new Ezarpena(erabID, key, value);
-        emaitza.add(ezarpena);
+        String hIzena = rs.getString("izena");
+        emaitza.add(hIzena);
       }
     }catch (SQLException e){
       System.err.println(e);
@@ -45,9 +41,4 @@ public class EzarpenakDBKud {
     return emaitza;
   }
 
-  public void eguneratu() {
-    DBKudeatzaile dbkud = DBKudeatzaile.getInstantzia();
-    dbkud.execSQL("INSERT INTO properties ('userid', 'key', 'value') values ('5','6','7')");
-
-  }
 }

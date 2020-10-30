@@ -1,7 +1,9 @@
 package ehu.isad;
 
+import ehu.isad.controller.ui.EzinBotatuKud;
 import ehu.isad.controller.ui.NagusiaKud;
 import ehu.isad.controller.ui.EzarpenakKud;
+import ehu.isad.controller.ui.StudentsControler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,11 +16,15 @@ public class Main extends Application {
 
   private Parent nagusiaUI;
   private Parent ezarpenakUI;
+  private Parent tableUI;
+  private Parent ezinBotaUI;
 
   private Stage stage;
 
   private NagusiaKud nagusiaKud;
   private EzarpenakKud ezarpenakKud;
+  private StudentsControler studentKud;
+  private EzinBotatuKud ezinBotatuKud;
 
 
   @Override
@@ -27,8 +33,8 @@ public class Main extends Application {
     stage = primaryStage;
     pantailakKargatu();
 
-    stage.setTitle("Ezarpenak lortu");
-    stage.setScene(new Scene(nagusiaUI, 450, 275));
+    stage.setTitle("Eurobisioa");
+    stage.setScene(new Scene(nagusiaUI, 525, 225));
     stage.show();
   }
 
@@ -43,6 +49,11 @@ public class Main extends Application {
     ezarpenakUI = (Parent) loaderMain.load();
     ezarpenakKud = loaderMain.getController();
     ezarpenakKud.setMainApp(this);
+
+    FXMLLoader loaderEzin = new FXMLLoader(getClass().getResource("/EzinBotatuUI.fxml"));
+    ezinBotaUI = (Parent) loaderEzin.load();
+    ezinBotatuKud = loaderEzin.getController();
+    ezinBotatuKud.setMainApp(this);
   }
 
 
@@ -53,6 +64,12 @@ public class Main extends Application {
   public void ezarpenakErakutsi() {
     stage.setScene(new Scene(ezarpenakUI));
     stage.show();
-    ezarpenakKud.getEzarpenak();
+  }
+
+  public void ezinBotatuErakutsi(String hIzena) {
+    stage.setScene(new Scene(ezinBotaUI));
+    ezinBotatuKud.setIzena(hIzena);
+    stage.show();
+
   }
 }
