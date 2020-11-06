@@ -52,7 +52,6 @@ public class HerrialdeControler extends Parent implements Initializable {
 
     @FXML
     void onClick(ActionEvent event) {
-
         mainApp.top3Erakutsi();
     }
 
@@ -156,10 +155,10 @@ public class HerrialdeControler extends Parent implements Initializable {
                         Integer puntuak = t.getTableView().getItems().get(t.getTablePosition().getRow()).getPuntuak();
 
                         //behin botoak sartuta, nork nori eta zenbat puntu jarri dituen gordeko da
-                        EzarpenakDBKud.getInstantzia().norkNoriPuntuak(nork, nori,puntuak);
+                        EzarpenakDBKud.getInstantzia().norkNoriPuntuak(nork, nori, puntuak);
 
                         //guztia eginda dagoala, herrialde bakotzari irabizi duten puntuak gehitu behar dira
-                        EzarpenakDBKud.getInstantzia().puntuakGehitu(nori,puntuak);
+                        EzarpenakDBKud.getInstantzia().puntuakGehitu(nori, puntuak);
                     }
                 }
         );

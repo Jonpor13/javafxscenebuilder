@@ -45,8 +45,7 @@ public class EzinBotatuKud implements Initializable {
 
     @FXML
     void onClick(ActionEvent event) {
-        Stage stage = (Stage) btnOkay.getScene().getWindow();
-        stage.close();
+        mainApp.top3Erakutsi();
     }
 
     @Override

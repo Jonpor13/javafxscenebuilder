@@ -121,4 +121,30 @@ public class EzarpenakDBKud {
     dbKudeatzaile.execSQL(query);
   }
 
+  public List<HerrialdeModel> lortuTop3(){
+
+    List<HerrialdeModel> emaitza = new ArrayList<>();
+    DBKudeatzaile dbkud = DBKudeatzaile.getInstantzia();
+
+    String query = "select o.herrialdea, o.puntuak from Ordezkaritza o, ParteHartzea p where p.izena = o.herrialdea AND o.urtea = '2020' AND p.urtea = '2020' AND p.etorrikoDa = 'bai' ORDER BY o.puntuak DESC LIMIT 3";
+    ResultSet rs = dbkud.execSQL(query);
+
+    try {
+      while (rs.next()) {
+
+        String oHerrialde = rs.getString("herrialdea");
+        String bandera = EzarpenakDBKud.getInstantzia().lortuHerrialdenBanderak(oHerrialde);
+        Image argazkia = IrudiKud.getInstantzia().banderaKargatu(bandera);
+        Integer oPuntuak = rs.getInt("puntuak");
+        HerrialdeModel herrialdea = new HerrialdeModel (argazkia, oHerrialde, null, null, oPuntuak);
+        emaitza.add(herrialdea);
+      }
+    }catch (SQLException e){
+      System.err.println(e);
+    }
+
+
+    return emaitza;
+  }
+
 }

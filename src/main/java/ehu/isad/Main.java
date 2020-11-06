@@ -91,6 +91,7 @@ public class Main extends Application {
   }
   public void top3Erakutsi(){
     stage.setScene(new Scene(top3UI));
+    top3Kud.top3Kargatu();
     stage.show();
   }
 
