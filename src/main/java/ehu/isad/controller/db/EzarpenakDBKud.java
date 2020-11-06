@@ -55,10 +55,14 @@ public class EzarpenakDBKud {
     try {
       while (rs.next()) {
 
-        String oIzena = rs.getString("herrialdea");
-        String bandera = EzarpenakDBKud.getInstantzia().lortuHerrialdenBanderak(oIzena);
+        String oHerrialde = rs.getString("herrialdea");
+        String bandera = EzarpenakDBKud.getInstantzia().lortuHerrialdenBanderak(oHerrialde);
         Image argazkia = IrudiKud.getInstantzia().banderaKargatu(bandera);
-        emaitza.add(hIzena);
+        String oArtista = rs.getString("artista");
+        String oAbestia = rs.getString("abestia");
+        Integer oPuntuak = rs.getInt("puntuak");
+        HerrialdeModel herrialdea = new HerrialdeModel (argazkia, oHerrialde, oArtista, oAbestia, oPuntuak);
+        emaitza.add(herrialdea);
       }
     }catch (SQLException e){
       System.err.println(e);

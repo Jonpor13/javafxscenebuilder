@@ -58,15 +58,15 @@ public class HerrialdeControler extends Parent implements Initializable {
         this.mainApp = main;
     }
 
-    private List<String> herrialdeak(){
-        return EzarpenakDBKud.getInstantzia().lortuHerrialdenIzenak();
-    }
-
     // add your data here from any source
     private ObservableList<HerrialdeModel> herrialdeModels;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        List<HerrialdeModel> herrialdeParteList = EzarpenakDBKud.getInstantzia().lortuHerrialdePartaide();
+        herrialdeModels = FXCollections.observableArrayList(herrialdeParteList);
+
         bandera.setCellValueFactory(new PropertyValueFactory<>("Bandera"));
         herrialdea.setCellValueFactory(new PropertyValueFactory<>("Herrialdea"));
         artista.setCellValueFactory(new PropertyValueFactory<>("Artista"));
