@@ -3,7 +3,7 @@ package ehu.isad;
 import ehu.isad.controller.ui.EzinBotatuKud;
 import ehu.isad.controller.ui.NagusiaKud;
 import ehu.isad.controller.ui.EzarpenakKud;
-import ehu.isad.controller.ui.StudentsControler;
+import ehu.isad.controller.ui.HerrialdeControler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,14 +16,14 @@ public class Main extends Application {
 
   private Parent nagusiaUI;
   private Parent ezarpenakUI;
-  private Parent tableUI;
+  private Parent taulaUI;
   private Parent ezinBotaUI;
 
   private Stage stage;
 
   private NagusiaKud nagusiaKud;
   private EzarpenakKud ezarpenakKud;
-  private StudentsControler studentKud;
+  private HerrialdeControler herrialdeKud;
   private EzinBotatuKud ezinBotatuKud;
 
 
@@ -54,6 +54,11 @@ public class Main extends Application {
     ezinBotaUI = (Parent) loaderEzin.load();
     ezinBotatuKud = loaderEzin.getController();
     ezinBotatuKud.setMainApp(this);
+
+    FXMLLoader loaderTaula = new FXMLLoader(getClass().getResource("/TableUI.fxml"));
+    taulaUI = (Parent) loaderTaula.load();
+    herrialdeKud = loaderTaula.getController();
+    herrialdeKud.setMainApp(this);
   }
 
 
@@ -69,7 +74,15 @@ public class Main extends Application {
   public void ezinBotatuErakutsi(String hIzena) {
     stage.setScene(new Scene(ezinBotaUI));
     ezinBotatuKud.setIzena(hIzena);
+    ezinBotatuKud.banderaKargatu(hIzena);
     stage.show();
 
+  }
+
+  public void herrialdeTableErakutsi(String hIzena){
+    stage.setScene(new Scene(taulaUI));
+    herrialdeKud.setIzena(hIzena);
+    herrialdeKud.banderaKargatu(hIzena);
+    stage.show();
   }
 }

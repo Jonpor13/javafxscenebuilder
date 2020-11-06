@@ -1,6 +1,7 @@
 package ehu.isad.controller.ui;
 
 import ehu.isad.Main;
+import ehu.isad.utils.IrudiKud;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,14 +38,7 @@ public class NagusiaKud implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 
-    InputStream is = getClass().getResourceAsStream("/Eurovision_Song_Contest_logo.svg.png");
-    BufferedImage reader = null;
-    try {
-      reader = ImageIO.read(is);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    Image argazkia = SwingFXUtils.toFXImage(reader,null);
+    Image argazkia = IrudiKud.getInstantzia().euroLogoKargatu();
     image.setImage(argazkia);
 
   }
