@@ -10,15 +10,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.net.URL;
 import java.util.List;
@@ -52,6 +53,7 @@ public class HerrialdeControler extends Parent implements Initializable {
     @FXML
     void onClick(ActionEvent event) {
 
+        mainApp.top3Erakutsi();
     }
 
     public void setMainApp(Main main) {
@@ -64,6 +66,8 @@ public class HerrialdeControler extends Parent implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        tbData.setEditable(true);
+
         List<HerrialdeModel> herrialdeParteList = EzarpenakDBKud.getInstantzia().lortuHerrialdePartaide();
         herrialdeModels = FXCollections.observableArrayList(herrialdeParteList);
 
@@ -72,9 +76,55 @@ public class HerrialdeControler extends Parent implements Initializable {
         artista.setCellValueFactory(new PropertyValueFactory<>("Artista"));
         abestiak.setCellValueFactory(new PropertyValueFactory<>("Abestiak"));
         puntuak.setCellValueFactory(new PropertyValueFactory<>("Puntuak"));
+
+        this.euroLogoKargatu();
+
+        puntuak.setCellFactory(
+                TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+
+        Callback<TableColumn<HerrialdeModel, String>, TableCell<HerrialdeModel, String>> defaultTextFieldCellFactory
+                = TextFieldTableCell.<HerrialdeModel>forTableColumn();
+
+        herrialdea.setCellFactory(col -> {
+            TableCell<HerrialdeModel, String> cell = defaultTextFieldCellFactory.call(col);
+
+            cell.setOnMouseClicked(event -> {
+                if ( ! cell.isEmpty()) {
+
+                    if (cell.getTableView().getSelectionModel().getSelectedItem().getHerrialdea().equals("")) {
+                        cell.setEditable(false);
+                    }else {
+                        cell.setEditable(true);
+                    }
+                }
+            });
+
+            return cell ;
+        });
+
+
+        bandera.setCellValueFactory(new PropertyValueFactory<HerrialdeModel, Image>("Bandera"));
+
+        bandera.setCellFactory(p -> new TableCell<>() {
+            public void updateItem(Image image, boolean empty) {
+                if (image != null && !empty){
+                    final ImageView imageview = new ImageView();
+                    imageview.setFitHeight(35);
+                    imageview.setFitWidth(35);
+                    imageview.setImage(image);
+                    setGraphic(imageview);
+                    setAlignment(Pos.CENTER);
+                    // tbData.refresh();
+                }else{
+                    setGraphic(null);
+                    setText(null);
+                }
+            };
+        });
+
         // modeloaren datuak taulan txertatu
         tbData.setItems(herrialdeModels);
-        this.euroLogoKargatu();
+
     }
 
     private void euroLogoKargatu(){
@@ -92,6 +142,27 @@ public class HerrialdeControler extends Parent implements Initializable {
         lblHerri.setText(hIzena + " horrela nahi ditu\n" +
                 "bere puntuak banatu:");
 
+    }
+
+    public void botoakKudeatu(String nork){
+        puntuak.setOnEditCommit(
+                t -> {
+                    String nori = t.getTableView().getSelectionModel().getSelectedItem().getHerrialdea();
+
+                    if ( ! nori.equals(nork)) {
+                        t.getTableView().getItems().get(t.getTablePosition().getRow())
+                                .setPuntuak(t.getNewValue());
+
+                        Integer puntuak = t.getTableView().getItems().get(t.getTablePosition().getRow()).getPuntuak();
+
+                        //behin botoak sartuta, nork nori eta zenbat puntu jarri dituen gordeko da
+                        EzarpenakDBKud.getInstantzia().norkNoriPuntuak(nork, nori,puntuak);
+
+                        //guztia eginda dagoala, herrialde bakotzari irabizi duten puntuak gehitu behar dira
+                        EzarpenakDBKud.getInstantzia().puntuakGehitu(nori,puntuak);
+                    }
+                }
+        );
     }
 
 }

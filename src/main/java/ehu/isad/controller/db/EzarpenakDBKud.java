@@ -49,7 +49,7 @@ public class EzarpenakDBKud {
     List<HerrialdeModel> emaitza = new ArrayList<>();
     DBKudeatzaile dbkud = DBKudeatzaile.getInstantzia();
 
-    String query = "select o.artista, o.herrialdea, o.abestia, o.puntuak from Ordezkaritza o, ParteHartzea p where p.izena = o.herrialdea AND o.urtea = '2020' AND p.urtea = '2020' AND p.etorrikoDa = 'bai'";
+    String query = "select o.artista, o.herrialdea, o.abestia from Ordezkaritza o, ParteHartzea p where p.izena = o.herrialdea AND o.urtea = '2020' AND p.urtea = '2020' AND p.etorrikoDa = 'bai'";
     ResultSet rs = dbkud.execSQL(query);
 
     try {
@@ -60,8 +60,7 @@ public class EzarpenakDBKud {
         Image argazkia = IrudiKud.getInstantzia().banderaKargatu(bandera);
         String oArtista = rs.getString("artista");
         String oAbestia = rs.getString("abestia");
-        Integer oPuntuak = rs.getInt("puntuak");
-        HerrialdeModel herrialdea = new HerrialdeModel (argazkia, oHerrialde, oArtista, oAbestia, oPuntuak);
+        HerrialdeModel herrialdea = new HerrialdeModel (argazkia, oHerrialde, oArtista, oAbestia, 0);
         emaitza.add(herrialdea);
       }
     }catch (SQLException e){
@@ -107,6 +106,19 @@ public class EzarpenakDBKud {
     }
 
     return hBozkatu;
+  }
+
+  public void norkNoriPuntuak(String nork, String nori, Integer puntuak){
+    String query = "insert into Bozkaketa(bozkatuaIzanDa, bozkatuDu, urtea, puntuak) values('"+nori+"','"+nork+"','2020','"+puntuak+"');";
+    DBKudeatzaile dbKudeatzaile = DBKudeatzaile.getInstantzia();
+    dbKudeatzaile.execSQL(query);
+
+  }
+
+  public void puntuakGehitu(String herrialdea, Integer sPuntuak){
+    String query = "update Ordezkaritza set puntuak = puntuak + '"+sPuntuak+"' where herrialdea = '"+herrialdea+"';";
+    DBKudeatzaile dbKudeatzaile = DBKudeatzaile.getInstantzia();
+    dbKudeatzaile.execSQL(query);
   }
 
 }

@@ -1,9 +1,6 @@
 package ehu.isad;
 
-import ehu.isad.controller.ui.EzinBotatuKud;
-import ehu.isad.controller.ui.NagusiaKud;
-import ehu.isad.controller.ui.EzarpenakKud;
-import ehu.isad.controller.ui.HerrialdeControler;
+import ehu.isad.controller.ui.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +15,7 @@ public class Main extends Application {
   private Parent ezarpenakUI;
   private Parent taulaUI;
   private Parent ezinBotaUI;
+  private Parent top3UI;
 
   private Stage stage;
 
@@ -25,6 +23,7 @@ public class Main extends Application {
   private EzarpenakKud ezarpenakKud;
   private HerrialdeControler herrialdeKud;
   private EzinBotatuKud ezinBotatuKud;
+  private Top3Kud top3Kud;
 
 
   @Override
@@ -59,6 +58,11 @@ public class Main extends Application {
     taulaUI = (Parent) loaderTaula.load();
     herrialdeKud = loaderTaula.getController();
     herrialdeKud.setMainApp(this);
+
+    FXMLLoader loaderTop3 = new FXMLLoader(getClass().getResource("/Top3UI.fxml"));
+    top3UI = (Parent) loaderTop3.load();
+    top3Kud = loaderTop3.getController();
+    top3Kud.setMainApp(this);
   }
 
 
@@ -76,13 +80,18 @@ public class Main extends Application {
     ezinBotatuKud.setIzena(hIzena);
     ezinBotatuKud.banderaKargatu(hIzena);
     stage.show();
-
   }
 
   public void herrialdeTableErakutsi(String hIzena){
     stage.setScene(new Scene(taulaUI));
     herrialdeKud.setIzena(hIzena);
     herrialdeKud.banderaKargatu(hIzena);
+    herrialdeKud.botoakKudeatu(hIzena);
     stage.show();
   }
+  public void top3Erakutsi(){
+    stage.setScene(new Scene(top3UI));
+    stage.show();
+  }
+
 }
