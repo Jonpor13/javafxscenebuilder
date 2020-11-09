@@ -2,6 +2,7 @@ package ehu.isad.controller.ui;
 
 import ehu.isad.Main;
 import ehu.isad.controller.db.EzarpenakDBKud;
+import ehu.isad.model.BozkaketaModel;
 import ehu.isad.model.Ezarpena;
 import ehu.isad.model.HerrialdeModel;
 import ehu.isad.utils.IrudiKud;
@@ -22,6 +23,7 @@ import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -47,12 +49,30 @@ public class HerrialdeControler extends Parent implements Initializable {
     @FXML
     private Button btmGorde;
 
+    private String hBotatu="";
+
+    private List<BozkaketaModel> bozkatuLista = new ArrayList<>();
 
     private Main mainApp;
 
     @FXML
     void onClick(ActionEvent event) {
-        mainApp.top3Erakutsi();
+        int i = 0;
+        int puntu = 0;
+        while (i<tbData.getItems().size()){
+            HerrialdeModel herrialdea = tbData.getItems().get(i);
+            puntu = puntu + herrialdea.getPuntuak();
+            i++;
+        }
+        if (puntu ==5){
+            this.dbEguneratu();
+            mainApp.top3Erakutsi();
+        }
+
+        else{
+            System.out.print("Guztira 5 puntu sartu behar dira.");
+        }
+
     }
 
     public void setMainApp(Main main) {
@@ -132,6 +152,7 @@ public class HerrialdeControler extends Parent implements Initializable {
     }
 
     public void banderaKargatu(String hIzena){
+        hBotatu = hIzena;
         String bandera = EzarpenakDBKud.getInstantzia().lortuHerrialdenBanderak(hIzena);
         Image argazkia = IrudiKud.getInstantzia().banderaKargatu(bandera);
         imaHerri.setImage(argazkia);
@@ -146,22 +167,58 @@ public class HerrialdeControler extends Parent implements Initializable {
     public void botoakKudeatu(String nork){
         puntuak.setOnEditCommit(
                 t -> {
-                    String nori = t.getTableView().getSelectionModel().getSelectedItem().getHerrialdea();
+                   String  nori = t.getTableView().getSelectionModel().getSelectedItem().getHerrialdea();
 
                     if ( ! nori.equals(nork)) {
                         t.getTableView().getItems().get(t.getTablePosition().getRow())
                                 .setPuntuak(t.getNewValue());
 
-                        Integer puntuak = t.getTableView().getItems().get(t.getTablePosition().getRow()).getPuntuak();
+                       Integer puntua = t.getTableView().getItems().get(t.getTablePosition().getRow()).getPuntuak();
 
-                        //behin botoak sartuta, nork nori eta zenbat puntu jarri dituen gordeko da
-                        EzarpenakDBKud.getInstantzia().norkNoriPuntuak(nork, nori, puntuak);
+                       if (listanDago(nori)!=null){
 
-                        //guztia eginda dagoala, herrialde bakotzari irabizi duten puntuak gehitu behar dira
-                        EzarpenakDBKud.getInstantzia().puntuakGehitu(nori, puntuak);
+                           listanDago(nori).setPuntuak(puntua);
+                       }
+
+                       else{
+
+                           BozkaketaModel bozkaketa;
+                           bozkaketa = new BozkaketaModel(nori, puntua);
+                           bozkatuLista.add(bozkaketa);
+                       }
                     }
                 }
         );
+    }
+
+
+    private BozkaketaModel listanDago (String noriHerria){
+        int i = 0;
+        while (i<bozkatuLista.size()) {
+            if (bozkatuLista.get(i).equals(noriHerria)){
+                return bozkatuLista.get(i);
+            }
+            i++;
+        }
+        return null;
+    }
+
+    private void dbEguneratu(){
+
+        int i = 0;
+        while (i<bozkatuLista.size()){
+            String nori = bozkatuLista.get(i).getHerrialdea();
+            Integer puntu = bozkatuLista.get(i).getPuntuak();
+
+            //behin botoak sartuta, nork nori eta zenbat puntu jarri dituen gordeko da
+            EzarpenakDBKud.getInstantzia().norkNoriPuntuak(hBotatu, nori, puntu);
+
+            //guztia eginda dagoala, herrialde bakotzari irabizi duten puntuak gehitu behar dira
+            EzarpenakDBKud.getInstantzia().puntuakGehitu(nori, puntu);
+
+            i++;
+        }
+
     }
 
 }
