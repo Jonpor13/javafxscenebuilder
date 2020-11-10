@@ -27,7 +27,7 @@ public class EzarpenakDBKud {
     List<String> emaitza = new ArrayList<>();
     DBKudeatzaile dbkud = DBKudeatzaile.getInstantzia();
 
-    String query = "select izena from ParteHartzea where urtea = '2020' AND etorrikoDa = 'bai'";
+    String query = "select izena from ParteHartzea where urtea = strftime('%Y','now') AND etorrikoDa = 'bai'";
     ResultSet rs = dbkud.execSQL(query);
 
     try {
@@ -49,7 +49,7 @@ public class EzarpenakDBKud {
     List<HerrialdeModel> emaitza = new ArrayList<>();
     DBKudeatzaile dbkud = DBKudeatzaile.getInstantzia();
 
-    String query = "select o.artista, o.herrialdea, o.abestia from Ordezkaritza o, ParteHartzea p where p.izena = o.herrialdea AND o.urtea = '2020' AND p.urtea = '2020' AND p.etorrikoDa = 'bai'";
+    String query = "select o.artista, o.herrialdea, o.abestia from Ordezkaritza o, ParteHartzea p where p.izena = o.herrialdea AND o.urtea = strftime('%Y','now') AND p.urtea = strftime('%Y','now') AND p.etorrikoDa = 'bai'";
     ResultSet rs = dbkud.execSQL(query);
 
     try {
@@ -109,7 +109,7 @@ public class EzarpenakDBKud {
   }
 
   public void norkNoriPuntuak(String nork, String nori, Integer puntuak){
-    String query = "insert into Bozkaketa(bozkatuaIzanDa, bozkatuDu, urtea, puntuak) values('"+nori+"','"+nork+"','2020','"+puntuak+"');";
+    String query = "insert into Bozkaketa(bozkatuaIzanDa, bozkatuDu, urtea, puntuak) values('"+nori+"','"+nork+"',strftime('%Y','now'),'"+puntuak+"');";
     DBKudeatzaile dbKudeatzaile = DBKudeatzaile.getInstantzia();
     dbKudeatzaile.execSQL(query);
 
@@ -126,7 +126,7 @@ public class EzarpenakDBKud {
     List<HerrialdeModel> emaitza = new ArrayList<>();
     DBKudeatzaile dbkud = DBKudeatzaile.getInstantzia();
 
-    String query = "select o.herrialdea, o.puntuak from Ordezkaritza o, ParteHartzea p where p.izena = o.herrialdea AND o.urtea = '2020' AND p.urtea = '2020' AND p.etorrikoDa = 'bai' ORDER BY o.puntuak DESC LIMIT 3";
+    String query = "select o.herrialdea, o.puntuak from Ordezkaritza o, ParteHartzea p where p.izena = o.herrialdea AND o.urtea = strftime('%Y','now') AND p.urtea = strftime('%Y','now') AND p.etorrikoDa = 'bai' ORDER BY o.puntuak DESC LIMIT 3";
     ResultSet rs = dbkud.execSQL(query);
 
     try {

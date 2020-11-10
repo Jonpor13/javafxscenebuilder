@@ -96,31 +96,26 @@ public class HerrialdeControler extends Parent implements Initializable {
         abestiak.setCellValueFactory(new PropertyValueFactory<>("Abestiak"));
         puntuak.setCellValueFactory(new PropertyValueFactory<>("Puntuak"));
 
-        this.euroLogoKargatu();
-
         puntuak.setCellFactory(
                 TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
 
-        Callback<TableColumn<HerrialdeModel, String>, TableCell<HerrialdeModel, String>> defaultTextFieldCellFactory
-                = TextFieldTableCell.<HerrialdeModel>forTableColumn();
+        Callback<TableColumn<HerrialdeModel, Integer>, TableCell<HerrialdeModel, Integer>> defaultTextFieldCellFactory
+                = TextFieldTableCell.forTableColumn(new IntegerStringConverter());
 
-        herrialdea.setCellFactory(col -> {
-            TableCell<HerrialdeModel, String> cell = defaultTextFieldCellFactory.call(col);
+        puntuak.setCellFactory(col -> {
+                    TableCell<HerrialdeModel, Integer> cell = defaultTextFieldCellFactory.call(col);
+                    cell.setOnMouseClicked(event -> {
+                        if (!cell.isEmpty()) {
+                            if (cell.getTableView().getSelectionModel().getSelectedItem().getHerrialdea().equals(hBotatu)) {
+                                cell.setEditable(false);
 
-            cell.setOnMouseClicked(event -> {
-                if ( ! cell.isEmpty()) {
-
-                    if (cell.getTableView().getSelectionModel().getSelectedItem().getHerrialdea().equals("")) {
-                        cell.setEditable(false);
-                    }else {
-                        cell.setEditable(true);
-                    }
-                }
-            });
-
-            return cell ;
+                            } else {
+                                cell.setEditable(true);
+                            }
+                        }
+                    });
+                    return cell;
         });
-
 
         bandera.setCellValueFactory(new PropertyValueFactory<HerrialdeModel, Image>("Bandera"));
 
@@ -143,6 +138,8 @@ public class HerrialdeControler extends Parent implements Initializable {
 
         // modeloaren datuak taulan txertatu
         tbData.setItems(herrialdeModels);
+
+        this.euroLogoKargatu();
 
     }
 
